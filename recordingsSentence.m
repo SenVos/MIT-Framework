@@ -2,15 +2,39 @@ function [recordings] = recordingsSentence(sentences)
 % function to look up all the recordings of a specific sentence
 % Usage [recordings] = recordingsSentence(sentences)
 % Input Parameter:
-%	 in_param: 		 Explain the parameter, default values, and units
+%	 sentences: 	string to contain the sentence to be searched for
 % Output Parameter:
-%	 out_param: 	 Explain the parameter, default values, and units
+%	 recordings: 	 cell array with all the recordings (and their sample
+% frequency) where the sentence is spoken. To play the recording back use:
+%       soundsc(recordings{x,1}, recordings{x,2})
+% where x corresponds to the recording to be played back.
 %------------------------------------------------------------------------ 
-% Example: Provide example here if applicable (one or two lines) 
-
+% Example: [recordings] = recordingsSentence('don''t ask me to carry an oily rag like that')
+%
+% recordings = 
+% 
+%     [39732x1 double]    [16000]
+%     [40141x1 double]    [16000]
+%     [38196x1 double]    [16000]
+%     [45260x1 double]    [16000]
+%     [49562x1 double]    [16000]
+%     [49868x1 double]    [16000]
+%     [44749x1 double]    [16000]
+%     [49050x1 double]    [16000]
+%     [47514x1 double]    [16000]
+%     [44647x1 double]    [16000]
+%     [55296x1 double]    [16000]
+%     [49357x1 double]    [16000]
+%     [44135x1 double]    [16000]
+%     [53248x1 double]    [16000]
+%     [41575x1 double]    [16000]
+%     [58470x1 double]    [16000]
+% 
+% 
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
-% Ver. 0.01 initial create (empty) 28-Apr-2015  Initials DB, SV
+% Ver. 0.01 initial create 28-Apr-2015  Initials DB, SV
+% Ver. 0.02 functional function 28-Apr-2015  Initials DB, SV
 
 %------------Your function implementation here--------------------------- 
 
@@ -25,8 +49,16 @@ recordings = cell(totalLength, 2);
 indices = strfind(allsenlist, sentences);
 
 for ii = 1:length(indices)
+    % find exact path, which stands before the sentence:
+    % when is the last line break?
+    lineBreaks = regexp(allsenlist(1:indices(ii)), '\n');
+    if isempty(lineBreaks)
+    % if there was no line break yet    
+        lineBreaks = 0;
+    end
+    recordingsPath = allsenlist(lineBreaks(end)+1 : indices(ii)-3);
+    
     % open the recordings and save in output variable
-    recordingsPath = allsenlist(indices(ii)-15 : indices(ii)-3)
     [recordings{ii,1}, recordings{ii,2}] = audioread(['TIMIT MIT/' recordingsPath '.wav']);
 end
 
