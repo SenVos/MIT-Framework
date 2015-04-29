@@ -1,5 +1,16 @@
-%function to search for all wav-files which belong to the commited name the
-%user puts in
+%RECORDINGSPERSON(person_name) search for all wav-files in the corresponding
+%   MIT/TIMIT-database which belong to the commited name the user puts in.
+%   This function returns a cell-array.
+%
+%   Example for right use (dr1-fvmh0 belongs to the MIT/TIMIT-database)
+%       recordings= RecordingsPerson(dr1-fvmh0)
+%       recordings is a cell-array
+%
+%   Example for wrong use (Hans does not belong to the MIT/TIMIT-database)
+%       recording s= RecordingsPerson(Hans)
+%       ERROR
+
+%   Copyright 2015 Sebastian Voges and Daniel Budelmann
 %------------1-----------------
 function [recordings] = RecordingsPerson(person_name)
 
