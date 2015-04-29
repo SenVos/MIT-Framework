@@ -1,4 +1,5 @@
-%function to search for all wav-files which belong to the commited name
+%function to search for all wav-files which belong to the commited name the
+%user puts in
 %------------1-----------------
 function [recordings] = RecordingsPerson(person_name)
 
@@ -27,7 +28,7 @@ while kk~= number_of_files(2)
     %find out sampled_data,sample_rate
     [sampled_data,sample_rate]=audioread(path_wavfile);
     %save sampled_data,sample_rate into recordings
-    recordings=[recordings;{sampled_data,sample_rate}]
+    recordings=[recordings;{sampled_data,sample_rate}];
     kk=kk+1;
 end
 
