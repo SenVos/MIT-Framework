@@ -15,6 +15,7 @@ function [recordings] = recordingsWord(word)
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 29-Apr-2015  Initials DB and SV
+% Ver. 1.00 function is functional 29-Apr-2015 Initials DB and SV
 
 %------------Your function implementation here--------------------------- 
 
@@ -36,25 +37,32 @@ for ii = 1:length(indices)
     if ~isletter(allsenlist(indices(ii)-1)) && ~isletter(allsenlist(indices(ii)+length(word)))
         
         % find exact path, which stands at the beginning of the line:
-        % i.e. when where the last line breaks?
-        lineBreaks = regexp(allsenlist(1:indices(ii)), '\n');
-        if isempty(lineBreaks)
-        % if there was no line break yet    
-            lineBreaks = 0;
-        end
-        % when does the path end?
-        pathEnd = regexp(allsenlist(lineBreaks(end)+1 : indices(ii)), '\s');
-        recordingsPath = allsenlist(lineBreaks(end)+1 : lineBreaks(end)+pathEnd(1)-1);
-
-        % open the recordings and save in output variable
-        [recordings{ii,1}, recordings{ii,2}] = audioread(['TIMIT MIT/' recordingsPath '.wav']);
+        % i.e. when are the line breaks?
+        lineBreaks = regexp(allsenlist(1:end), '\n');
+        % when was the previous line break? (0 for none yet)
+        previousLineBreaks = 0;
+        previousLineBreaks = [previousLineBreaks lineBreaks(indices(ii) > lineBreaks)];
+        % when is the next line break?
+        nextLineBreaks = lineBreaks(indices(ii) < lineBreaks); 
         
+        % when does the path end?
+        pathEnd = regexp(allsenlist(previousLineBreaks(end)+1 : indices(ii)), '\s');
+        recordingsPath = allsenlist(previousLineBreaks(end)+1 : previousLineBreaks(end)+pathEnd(1)-1);
+
+        % find the start and end sample for the words
+        regionOfInterest = regexp( allsenlist(previousLineBreaks(end)+1:nextLineBreaks(1)), [word '\s\d+\s\d+'], 'match' );
+        sampleRange = regexp( regionOfInterest{1}, '\d+', 'match');
+        sampleRange = str2double(sampleRange);
+        % open the recordings in the specified range
+        [recordings{ii,1}, recordings{ii,2}] = audioread(['TIMIT MIT/' recordingsPath '.wav'], sampleRange);
     end
 end
 
 %delete empty cells (which where created during allocation but where not
 %filled in due to being a wordpart)
-recordings(cellfun(@isempty,recordings)) = [];
+recordings(cellfun('isempty',recordings)) = [];
+recordings = [recordings(1:end/2)' recordings(end/2+1:end)'];
+
 
 
 %--------------------Licence ---------------------------------------------
