@@ -17,14 +17,13 @@ folder_adress_person=dir([direction_person '*.wav'])
 recording_names={folder_adress_person.name}
 
 %------------4-------------
-
-hallo=[direction_person recording_names{1}]
-[sampled_data,sample_rate]=audioread(hallo)
+%
+[sampled_data,sample_rate]=audioread(dir([direction_person char(recording_names(1))]))
 
 
 %------------5-------------
 
 
-recordings=hallo
+recordings=recording_names;
 end
 
