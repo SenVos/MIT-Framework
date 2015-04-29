@@ -20,7 +20,7 @@ function [recordings] = recordingsPhonem(phonem)
 %------------Your function implementation here--------------------------- 
 
 % open the list with all words and their corresponding samples
-allsenlist = fileread('TIMIT MIT\allphonetime.txt');
+allsenlist = fileread('../TIMIT MIT/allphonetime.txt');
 
 % how many recordings will be found? allocate space
 totalLength = length(strfind(allsenlist, phonem));
@@ -53,7 +53,7 @@ for ii = 1:length(indices)
         sampleRange = regexp( regionOfInterest{1}, '\d+', 'match');
         sampleRange = str2double(sampleRange);
         % open the recordings in the specified range
-        [recordings{ii,1}, recordings{ii,2}] = audioread(['TIMIT MIT/' recordingsPath '.wav'], sampleRange);
+        [recordings{ii,1}, recordings{ii,2}] = audioread(['../TIMIT MIT/' recordingsPath '.wav'], sampleRange);
     end
 end
 

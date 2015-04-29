@@ -3,29 +3,29 @@
 %   This function returns a cell-array.
 %
 %   Example for right use (dr1-fvmh0 belongs to the MIT/TIMIT-database)
-%       recordings= RecordingsPerson(dr1-fvmh0)
+%       recordings= recordingsPerson(dr1-fvmh0)
 %       recordings is a cell-array
 %
 %   Example for wrong use (Hans does not belong to the MIT/TIMIT-database)
-%       recording s= RecordingsPerson(Hans)
+%       recording s= recordingsPerson(Hans)
 %       ERROR
 
 %   Copyright 2015 Sebastian Voges and Daniel Budelmann
 %------------1-----------------
-function [recordings] = RecordingsPerson(person_name)
+function [recordings] = recordingsPerson(person_name)
 
 
 %------------2-----------------
 %create a string that contains the folder adress of the person the user
 %chooses
-main_folder_adress='TIMIT MIT/';
+main_folder_adress='../TIMIT MIT/';
 direction_person=[main_folder_adress person_name '/'];
 %search folder of affected person for all files which ends with *.wav
 folder_adress_person=dir([direction_person '*.wav']);
 
 
 %------------3-------------------
-%put all rocording names into a cell-array
+%put all recording names into a cell-array
 recording_names={folder_adress_person.name};
 
 %------------4 and 5-------------
