@@ -42,11 +42,11 @@ function [recordings] = recordingsSentence(sentences)
 allsenlist = fileread('../TIMIT MIT/allsenlist.txt');
 
 % how many recordings will be found? allocate space
-totalLength = length(strfind(allsenlist, sentences));
-recordings = cell(totalLength, 2);
+totalLength = length(strfind(allsenlist, sentences))
+recordings = cell(totalLength, 2)
     
 % find the indices of the sentences
-indices = strfind(allsenlist, sentences);
+indices = strfind(allsenlist, sentences)
 
 for ii = 1:length(indices)
     % find exact path, which stands before the sentence:
