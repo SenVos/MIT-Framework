@@ -20,17 +20,41 @@ function [recordings] = searchFor(person, sentence, word, phoneme)
 
 %------------Your function implementation here--------------------------- 
 
-
 cd src
 
-recPerson = recordingsPerson(person);
-recSentence = recordingsSentence(sentence);
-recWord = recordingsWord(word);
-recPhoneme = recordingsPhoneme(phoneme);
+[recs_person, fs_wavfile, path_wavfile] = recordingsPerson(person);
+[recs_sentence, fs_sentence, path_sentence] = recordingsSentence(sentence);
+[recs_word, fs_word, path_word, sampleRange_word] = recordingsWord(word);
+[recs_phoneme, fs_phoneme, path_phoneme, sampleRange_phoneme] = recordingsPhoneme(phoneme);
+
+sampleRange_phoneme{1:10}
+
+% get the filepath where all criteria fit
+path = intersect(intersect(intersect(path_wavfile, path_sentence), path_word), path_phoneme);
+
+% find the recording in the path
+index_word = find(strcmp(path_word, path))
+index_phoneme = find(strcmp(path_phoneme, path))
+
+% for all words and phonemes that are in the sentence and spoken by the
+% person:
+for kk=1:length(index_word)
+    % set temporary variable for the sample range
+    word = sampleRange_word{index_word(kk)}
+    
+    for ii=1:length(index_phoneme)
+        % set temporary variable for the sample range
+        pho = sampleRange_phoneme{index_phoneme(ii)}
+        
+        % compare the sampleRanges to see if the phoneme is part of the word
+        if pho(1) >= word(1) && pho(2) <= word(2)
+            recordings = recs_phoneme(index_phoneme);
+        end
+    end
+end
+
 
 cd ..
-
-recordings = recSentence;
 
 %--------------------Licence ---------------------------------------------
 % Copyright (c) <2015> Daniel Budelmann and Sebastian Voges

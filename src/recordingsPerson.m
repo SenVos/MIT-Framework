@@ -12,14 +12,13 @@
 
 %   Copyright 2015 Sebastian Voges and Daniel Budelmann
 %------------1-----------------
-function [recordings, fs] = recordingsPerson(person_name)
+function [recordings, fs, path_wavfile] = recordingsPerson(person_name)
 
 
 %------------2-----------------
 %create a string that contains the folder adress of the person the user
 %chooses
-main_folder_adress='../TIMIT MIT/';
-direction_person=[main_folder_adress person_name '/'];
+direction_person=['../TIMIT MIT/' person_name '/'];
 %search folder of affected person for all files which ends with *.wav
 folder_adress_person=dir([direction_person '*.wav']);
 
@@ -33,15 +32,16 @@ recording_names={folder_adress_person.name};
 number_of_files=length(recording_names);
 recordings=cell(number_of_files,1);
 fs=cell(number_of_files,1);
-%takes sampled data and sample rate from every wav-file and put it into a
-%cell-array
+path_wavfile=cell(number_of_files,1);
 
+%take sampled data, sample frequency and the corresponding path from every 
+%wav-file and put it into a cell-array
 for kk=1:number_of_files
     
     %specific path of every wav-file
-    path_wavfile=[direction_person recording_names{kk}];
+    path_wavfile{kk}=[direction_person recording_names{kk}];
     %find out sampled_data,sample_rate
-    [sampled_data,sample_rate]=audioread(path_wavfile);
+    [sampled_data,sample_rate]=audioread(path_wavfile{kk});
     %save sampled_data,sample_rate into recordings
     recordings(kk)={sampled_data};
     fs(kk)={sample_rate};

@@ -10,7 +10,7 @@ clc;
 %------------Your script starts here-------- 
 
 %Define your parameters and adjust your function call
-[out_param] = recordingsSentence(in_param);
+[recordings, fs, path_sentence] = recordingsSentence('don''t ask me to carry an oily rag like that')
 
 
 %--------------------Licence ---------------------------------------------

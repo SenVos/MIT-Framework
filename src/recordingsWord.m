@@ -1,4 +1,4 @@
-function [recordings, fs, which_word] = recordingsWord(word)
+function [recordings, fs, path_word, sampleRange] = recordingsWord(word)
 % function to find the recording sections, which contain a specific word
 % Usage [recordings] = recordingsWord(word)
 % Input Parameter:
@@ -9,13 +9,14 @@ function [recordings, fs, which_word] = recordingsWord(word)
 %       soundsc(recordings{x,1}, recordings{x,2})
 % where x corresponds to the recording to be played back.
 %------------------------------------------------------------------------ 
-% Example: [recordings] = recordingsWord(word)
+% Example: [recordings, fs, path_word, sampleRange] = recordingsWord('she')
 
 
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 29-Apr-2015  Initials DB and SV
 % Ver. 1.00 function is functional 29-Apr-2015 Initials DB and SV
+% Ver. 1.10 added output of fs, path and range 30-Apr-2015  Initials DB, SV
 
 %------------Your function implementation here--------------------------- 
 
@@ -23,16 +24,17 @@ function [recordings, fs, which_word] = recordingsWord(word)
 % open the list with all words and their corresponding samples
 allsenlist = fileread('../TIMIT MIT/allsentime.txt');
 
-% how many recordings will be found? allocate space
-totalLength = length(strfind(allsenlist, word));
-recordings = cell(totalLength, 1);
-fs = cell(totalLength, 1);
-which_word = word;
-    
 % find the indices of the sentences
 indices = strfind(allsenlist, word);
 
-for ii = 1:length(indices)
+% how many recordings will be found? allocate space
+totalLength = length(indices);
+recordings = cell(totalLength, 1);
+fs = cell(totalLength, 1);
+path_word = cell(totalLength, 1);
+sampleRange = cell(totalLength, 1);
+    
+for ii = 1:totalLength
     
     % only consider full words, not wordparts (e.g. 'vanquished', when you
     % look for 'she')
@@ -49,14 +51,14 @@ for ii = 1:length(indices)
         
         % when does the path end?
         pathEnd = regexp(allsenlist(previousLineBreaks(end)+1 : indices(ii)), '\s');
-        recordingsPath = allsenlist(previousLineBreaks(end)+1 : previousLineBreaks(end)+pathEnd(1)-1);    
+        path_word{ii} = ['../TIMIT MIT/' allsenlist(previousLineBreaks(end)+1 : previousLineBreaks(end)+pathEnd(1)-1) '.wav'];
         
         % find the start and end sample for the words
         regionOfInterest = regexp( allsenlist(previousLineBreaks(end)+1:nextLineBreaks(1)), [word '\s\d+\s\d+'], 'match' );
-        sampleRange = regexp( regionOfInterest{1}, '\d+', 'match');
-        sampleRange = str2double(sampleRange);
+        range = regexp( regionOfInterest{1}, '\d+', 'match');
+        sampleRange{ii} = str2double(range);
         % open the recordings in the specified range
-        [recordings{ii}, fs{ii}] = audioread(['../TIMIT MIT/' recordingsPath '.wav'], sampleRange);
+        [recordings{ii}, fs{ii}] = audioread(path_word{ii}, sampleRange{ii});
     end
 end
 
@@ -64,6 +66,8 @@ end
 %filled in due to being a wordpart)
 recordings(cellfun('isempty',recordings)) = [];
 fs(cellfun('isempty',fs)) = [];
+path_word(cellfun('isempty',path_word)) = [];
+sampleRange(cellfun('isempty',sampleRange)) = [];
 
 
 %--------------------Licence ---------------------------------------------

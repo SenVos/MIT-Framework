@@ -1,4 +1,4 @@
-function [recordings, fs] = recordingsPhoneme(phoneme)
+function [recordings, fs, path_phoneme, sampleRange] = recordingsPhoneme(phoneme)
 % function to look up all the recordings of a specific phonem
 % Usage [recordings] = recordingsPhoneme(phoneme)
 % Input Parameter:
@@ -9,24 +9,20 @@ function [recordings, fs] = recordingsPhoneme(phoneme)
 %       soundsc(recordings{x,1}, recordings{x,2})
 % where x corresponds to the recording to be played back.
 %------------------------------------------------------------------------ 
-% Example: [recordings] = recordingsPhoneme('sh')
+% Example: [recordings, fs, path_phoneme, sampleRange] = recordingsPhoneme('sh')
 %
 % 
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 29-Apr-2015  Initials DB, SV
 % Ver. 1.00 functional function 29-Apr-2015  Initials DB, SV
+% Ver. 1.10 added output of fs, path and range 30-Apr-2015  Initials DB, SV
 
 %------------Your function implementation here--------------------------- 
 
 % open the list with all words and their corresponding samples
 allsenlist = fileread('../TIMIT MIT/allphonetime.txt');
 
-% how many recordings will be found? allocate space
-totalLength = length(strfind(allsenlist, phoneme));
-recordings = cell(totalLength, 1);
-fs = cell(totalLength, 1);
-    
 % find the indices of the phonem
 indices = strfind(allsenlist, phoneme);
 
@@ -36,7 +32,14 @@ if indices(1) == 1
     indices(1) = [];
 end
 
-for ii = 1:length(indices)
+% how many recordings will be found? allocate space
+totalLength = length(indices);
+recordings = cell(totalLength, 1);
+fs = cell(totalLength, 1);
+path_phoneme = cell(totalLength, 1);
+sampleRange = cell(totalLength, 1);
+    
+for ii = 1:totalLength
     
     % only consider phonems, not parts of the path (e.g. 's' is part of
     % 'dr1-mcpm0/sa1')
@@ -53,14 +56,14 @@ for ii = 1:length(indices)
 
         % when does the path end?
         pathEnd = regexp(allsenlist(previousLineBreaks(end)+1 : indices(ii)), '\s');
-        recordingsPath = allsenlist(previousLineBreaks(end)+1 : previousLineBreaks(end)+pathEnd(1)-1);
-
-        % find the start and end sample for the phonem
-        regionOfInterest = regexp( allsenlist(previousLineBreaks(end)+1:nextLineBreaks(1)), [phoneme '\s\d+\s\d+'], 'match' );
-        sampleRange = regexp( regionOfInterest{1}, '\d+', 'match');
-        sampleRange = str2double(sampleRange);
+        path_phoneme{ii} = ['../TIMIT MIT/' allsenlist(previousLineBreaks(end)+1 : previousLineBreaks(end)+pathEnd(1)-1) '.wav'];
+        
+        % find the start and end sample for the phonemes
+        regionOfInterest = regexp( allsenlist(previousLineBreaks(end)+1:nextLineBreaks(1)), [phoneme '\s\d+\s\d+'], 'match' )
+        range = regexp( regionOfInterest{:}, '\d+', 'match')
+        sampleRange{ii} = str2double(range)
         % open the recordings in the specified range
-        [recordings{ii}, fs{ii}] = audioread(['../TIMIT MIT/' recordingsPath '.wav'], sampleRange);
+        [recordings{ii}, fs{ii}] = audioread(path_phoneme{ii}, sampleRange{ii});
     end
 end
 
@@ -68,6 +71,8 @@ end
 %filled in due to being a wordpart)
 recordings(cellfun('isempty',recordings)) = [];
 fs(cellfun('isempty',fs)) = [];
+path_phoneme(cellfun('isempty',path_phoneme)) = [];
+sampleRange(cellfun('isempty',sampleRange)) = [];
 
 %--------------------Licence ---------------------------------------------
 % Copyright (c) <2015> Daniel Budelmann and Sebastian Voges

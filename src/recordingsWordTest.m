@@ -10,7 +10,7 @@ clc;
 %------------Your script starts here-------- 
 
 %Define your parameters and adjust your function call
-[out_param] = recordingsWord(in_param);
+[recordings, fs, path_word, sampleRange] = recordingsWord('she')
 
 
 %--------------------Licence ---------------------------------------------

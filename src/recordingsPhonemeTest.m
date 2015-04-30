@@ -9,10 +9,8 @@ clc;
 
 %------------Your script starts here-------- 
 
-tic
 %Define your parameters and adjust your function call
-[out_param] = recordingsPhoneme('d');
-toc
+[recordings, fs, path_word, sampleRange] = recordingsPhoneme('nx')
 
 %--------------------Licence ---------------------------------------------
 % Copyright (c) <2015> Daniel Budelmann and Sebastian Voges

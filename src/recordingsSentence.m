@@ -1,4 +1,4 @@
-function [recordings, fs] = recordingsSentence(sentence)
+function [recordings, fs, path_sentence] = recordingsSentence(sentence)
 % function to look up all the recordings of a specific sentence
 % Usage [recordings] = recordingsSentence(sentences)
 % Input Parameter:
@@ -9,7 +9,7 @@ function [recordings, fs] = recordingsSentence(sentence)
 %       soundsc(recordings{x,1}, recordings{x,2})
 % where x corresponds to the recording to be played back.
 %------------------------------------------------------------------------ 
-% Example: [recordings] = recordingsSentence('don''t ask me to carry an oily rag like that')
+% Example: bub
 %
 % recordings = 
 % 
@@ -35,36 +35,36 @@ function [recordings, fs] = recordingsSentence(sentence)
 % Version History:
 % Ver. 0.01 initial create 28-Apr-2015  Initials DB, SV
 % Ver. 1.00 functional function 28-Apr-2015  Initials DB, SV
-% Ver. 1.10
+% Ver. 1.10 gives out fs and path 30-Apr-2015  Initials DB, SV
 
 %------------Your function implementation here--------------------------- 
 
 % open the list with all sentences
 allsenlist = fileread('../TIMIT MIT/allsenlist.txt');
 
-% how many recordings will be found? allocate space
-totalLength = length(strfind(allsenlist, sentence));
-recordings = cell(totalLength, 1);
-fs = cell(totalLength, 1);
-    
-% find the indices of the sentences
+% find the starting indices of the sentences
 indices = strfind(allsenlist, sentence);
 
-for ii = 1:length(indices)
+% how many recordings will be found? allocate space
+totalLength = length(indices);
+recordings = cell(totalLength, 1);
+fs = cell(totalLength, 1);
+path_sentence = cell(totalLength, 1);
+
+for ii = 1:totalLength
     % find exact path, which stands before the sentence:
     % when is the last line break?
     lineBreaks = regexp(allsenlist(1:end), '\n');    
-    % when was the previous line break? (0 for none yet)
+    % when were the previous line breaks? (0 for none yet)
     previousLineBreaks = 0;
     previousLineBreaks = [previousLineBreaks lineBreaks(indices(ii) > lineBreaks)];
-    % when is the next line break?
-    nextLineBreaks = lineBreaks(indices(ii) < lineBreaks); 
     
-    % get the path for the wave file
-    recordingsPath = allsenlist(previousLineBreaks(end)+1 : indices(ii)-3);
+    % get the path for the wave file (indices(ii)-3 because of the tabbing
+    % after the filepath)
+    path_sentence{ii} =['../TIMIT MIT/' allsenlist(previousLineBreaks(end)+1 : indices(ii)-3) '.wav'];
     
     % open the recordings and save in output variable
-    [recordings{ii}, fs{ii}] = audioread(['../TIMIT MIT/' recordingsPath '.wav']);
+    [recordings{ii}, fs{ii}] = audioread(path_sentence{ii});
 end
 
 %--------------------Licence ---------------------------------------------
