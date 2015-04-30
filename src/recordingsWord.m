@@ -1,4 +1,4 @@
-function [recordings] = recordingsWord(word)
+function [recordings, fs, which_word] = recordingsWord(word)
 % function to find the recording sections, which contain a specific word
 % Usage [recordings] = recordingsWord(word)
 % Input Parameter:
@@ -25,7 +25,9 @@ allsenlist = fileread('../TIMIT MIT/allsentime.txt');
 
 % how many recordings will be found? allocate space
 totalLength = length(strfind(allsenlist, word));
-recordings = cell(totalLength, 2);
+recordings = cell(totalLength, 1);
+fs = cell(totalLength, 1);
+which_word = word;
     
 % find the indices of the sentences
 indices = strfind(allsenlist, word);
@@ -47,22 +49,21 @@ for ii = 1:length(indices)
         
         % when does the path end?
         pathEnd = regexp(allsenlist(previousLineBreaks(end)+1 : indices(ii)), '\s');
-        recordingsPath = allsenlist(previousLineBreaks(end)+1 : previousLineBreaks(end)+pathEnd(1)-1);
-
+        recordingsPath = allsenlist(previousLineBreaks(end)+1 : previousLineBreaks(end)+pathEnd(1)-1);    
+        
         % find the start and end sample for the words
         regionOfInterest = regexp( allsenlist(previousLineBreaks(end)+1:nextLineBreaks(1)), [word '\s\d+\s\d+'], 'match' );
         sampleRange = regexp( regionOfInterest{1}, '\d+', 'match');
         sampleRange = str2double(sampleRange);
         % open the recordings in the specified range
-        [recordings{ii,1}, recordings{ii,2}] = audioread(['../TIMIT MIT/' recordingsPath '.wav'], sampleRange);
+        [recordings{ii}, fs{ii}] = audioread(['../TIMIT MIT/' recordingsPath '.wav'], sampleRange);
     end
 end
 
 %delete empty cells (which where created during allocation but where not
 %filled in due to being a wordpart)
 recordings(cellfun('isempty',recordings)) = [];
-recordings = [recordings(1:end/2)' recordings(end/2+1:end)'];
-
+fs(cellfun('isempty',fs)) = [];
 
 
 %--------------------Licence ---------------------------------------------

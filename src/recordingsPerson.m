@@ -12,7 +12,7 @@
 
 %   Copyright 2015 Sebastian Voges and Daniel Budelmann
 %------------1-----------------
-function [recordings] = recordingsPerson(person_name)
+function [recordings, fs] = recordingsPerson(person_name)
 
 
 %------------2-----------------
@@ -31,7 +31,8 @@ recording_names={folder_adress_person.name};
 %------------4 and 5-------------
 %create all variables for the while-loop
 number_of_files=length(recording_names);
-recordings=cell(number_of_files,2);
+recordings=cell(number_of_files,1);
+fs=cell(number_of_files,1);
 %takes sampled data and sample rate from every wav-file and put it into a
 %cell-array
 
@@ -42,8 +43,8 @@ for kk=1:number_of_files
     %find out sampled_data,sample_rate
     [sampled_data,sample_rate]=audioread(path_wavfile);
     %save sampled_data,sample_rate into recordings
-    recordings(kk,1)={sampled_data};
-    recordings(kk,2)={sample_rate};
+    recordings(kk)={sampled_data};
+    fs(kk)={sample_rate};
 end
 
 end

@@ -1,4 +1,4 @@
-function [recordings] = recordingsSentence(sentences)
+function [recordings, fs] = recordingsSentence(sentence)
 % function to look up all the recordings of a specific sentence
 % Usage [recordings] = recordingsSentence(sentences)
 % Input Parameter:
@@ -34,7 +34,8 @@ function [recordings] = recordingsSentence(sentences)
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 28-Apr-2015  Initials DB, SV
-% Ver. 0.02 functional function 28-Apr-2015  Initials DB, SV
+% Ver. 1.00 functional function 28-Apr-2015  Initials DB, SV
+% Ver. 1.10
 
 %------------Your function implementation here--------------------------- 
 
@@ -42,24 +43,28 @@ function [recordings] = recordingsSentence(sentences)
 allsenlist = fileread('../TIMIT MIT/allsenlist.txt');
 
 % how many recordings will be found? allocate space
-totalLength = length(strfind(allsenlist, sentences))
-recordings = cell(totalLength, 2)
+totalLength = length(strfind(allsenlist, sentence));
+recordings = cell(totalLength, 1);
+fs = cell(totalLength, 1);
     
 % find the indices of the sentences
-indices = strfind(allsenlist, sentences)
+indices = strfind(allsenlist, sentence);
 
 for ii = 1:length(indices)
     % find exact path, which stands before the sentence:
     % when is the last line break?
-    lineBreaks = regexp(allsenlist(1:indices(ii)), '\n');
-    if isempty(lineBreaks)
-    % if there was no line break yet    
-        lineBreaks = 0;
-    end
-    recordingsPath = allsenlist(lineBreaks(end)+1 : indices(ii)-3);
+    lineBreaks = regexp(allsenlist(1:end), '\n');    
+    % when was the previous line break? (0 for none yet)
+    previousLineBreaks = 0;
+    previousLineBreaks = [previousLineBreaks lineBreaks(indices(ii) > lineBreaks)];
+    % when is the next line break?
+    nextLineBreaks = lineBreaks(indices(ii) < lineBreaks); 
+    
+    % get the path for the wave file
+    recordingsPath = allsenlist(previousLineBreaks(end)+1 : indices(ii)-3);
     
     % open the recordings and save in output variable
-    [recordings{ii,1}, recordings{ii,2}] = audioread(['../TIMIT MIT/' recordingsPath '.wav']);
+    [recordings{ii}, fs{ii}] = audioread(['../TIMIT MIT/' recordingsPath '.wav']);
 end
 
 %--------------------Licence ---------------------------------------------

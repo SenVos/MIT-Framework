@@ -1,4 +1,4 @@
-function [recordings] = recordingsPhoneme(phoneme)
+function [recordings, fs] = recordingsPhoneme(phoneme)
 % function to look up all the recordings of a specific phonem
 % Usage [recordings] = recordingsPhoneme(phoneme)
 % Input Parameter:
@@ -24,7 +24,8 @@ allsenlist = fileread('../TIMIT MIT/allphonetime.txt');
 
 % how many recordings will be found? allocate space
 totalLength = length(strfind(allsenlist, phoneme));
-recordings = cell(totalLength, 2);
+recordings = cell(totalLength, 1);
+fs = cell(totalLength, 1);
     
 % find the indices of the phonem
 indices = strfind(allsenlist, phoneme);
@@ -59,14 +60,14 @@ for ii = 1:length(indices)
         sampleRange = regexp( regionOfInterest{1}, '\d+', 'match');
         sampleRange = str2double(sampleRange);
         % open the recordings in the specified range
-        [recordings{ii,1}, recordings{ii,2}] = audioread(['../TIMIT MIT/' recordingsPath '.wav'], sampleRange);
+        [recordings{ii}, fs{ii}] = audioread(['../TIMIT MIT/' recordingsPath '.wav'], sampleRange);
     end
 end
 
 %delete empty cells (which where created during allocation but where not
 %filled in due to being a wordpart)
 recordings(cellfun('isempty',recordings)) = [];
-recordings = [recordings(1:end/2)' recordings(end/2+1:end)'];
+fs(cellfun('isempty',fs)) = [];
 
 %--------------------Licence ---------------------------------------------
 % Copyright (c) <2015> Daniel Budelmann and Sebastian Voges
