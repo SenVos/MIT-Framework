@@ -1,22 +1,51 @@
 function [recordings, fs, path_word, sampleRange] = recordingsWord(word)
 % function to find the recording sections, which contain a specific word
-% Usage [recordings] = recordingsWord(word)
+% Usage [recordings, fs, path_word, sampleRange] = recordingsWord(word)
 % Input Parameter:
 %	 word: 		 string to contain the word to be searched for
 % Output Parameter:
-%	 recordings: 	 cell array with all the recordings (and their sample
-% frequency) where the word is spoken. To play the recording back use:
-%       soundsc(recordings{x,1}, recordings{x,2})
-% where x corresponds to the recording to be played back.
+%	 recordings: 	 cell array with all the recordings where the word is 
+%                    spoken.
+%    fs:             cell array with the corresponding sampling frequency
+%    path_word:      directory path to the corresponding wave file
+%    sampleRange:    start and end sample, between which the word is spoken
+% 
 %------------------------------------------------------------------------ 
-% Example: [recordings, fs, path_word, sampleRange] = recordingsWord('she')
-
-
+% Example: [recordings, fs, path_word, sampleRange] = recordingsWord('example')
+% 
+% recordings = 
+% 
+%     [7802x1 double]
+%     [9169x1 double]
+% 
+% 
+% fs = 
+% 
+%     [16000]
+%     [16000]
+% 
+% 
+% path_word = 
+% 
+%     '../TIMIT MIT/dr2-faem0/si1392.wav'
+%     '../TIMIT MIT/dr5-mbgt0/si1341.wav'
+% 
+% 
+% sampleRange = 
+% 
+%     [1x2 double]
+%     [1x2 double] 
+%
+% To play the recording back use:
+% soundsc(recordings{x}, fs{x})
+% where x corresponds to the recording to be played back
+%
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 29-Apr-2015  Initials DB and SV
 % Ver. 1.00 function is functional 29-Apr-2015 Initials DB and SV
 % Ver. 1.10 added output of fs, path and range 30-Apr-2015  Initials DB, SV
+% Ver. 1.20 optimized code 1-May-2015  Initials DB, SV
 
 %------------Your function implementation here--------------------------- 
 
@@ -36,26 +65,30 @@ sampleRange = cell(totalLength, 1);
     
 for ii = 1:totalLength
     
+    % to find the exact directory, which stands at the beginning of the 
+    % line, one has to find the line breaks
+    lineBreaks = regexp(allsenlist(1:end), '\n');
+    % when was the previous line break? (0 for none yet)
+    prevLineBreaks = [0, lineBreaks(indices(ii)>lineBreaks)];
+
+    %shorten allsenlist to start with directory of phoneme
+    allsenlist = allsenlist(prevLineBreaks(end)+1:end);
+    indices = indices - prevLineBreaks(end);
+        
     % only consider full words, not wordparts (e.g. 'vanquished', when you
-    % look for 'she')
-    if ~isletter(allsenlist(indices(ii)-1)) && ~isletter(allsenlist(indices(ii)+length(word)))
+    % look for 'she'). In other words, only consider something followed
+    % by a space
+    if isspace(allsenlist(indices(ii)+length(word)))
         
-        % find exact path, which stands at the beginning of the line:
-        % i.e. when are the line breaks?
-        lineBreaks = regexp(allsenlist(1:end), '\n');
-        % when was the previous line break? (0 for none yet)
-        previousLineBreaks = 0;
-        previousLineBreaks = [previousLineBreaks lineBreaks(indices(ii) > lineBreaks)];
-        % when is the next line break?
-        nextLineBreaks = lineBreaks(indices(ii) < lineBreaks); 
-        
-        % when does the path end?
-        pathEnd = regexp(allsenlist(previousLineBreaks(end)+1 : indices(ii)), '\s');
-        path_word{ii} = ['../TIMIT MIT/' allsenlist(previousLineBreaks(end)+1 : previousLineBreaks(end)+pathEnd(1)-1) '.wav'];
+        % look for the directory(from linebreak to whitespace) and save it4
+        pathEnd = regexp(allsenlist(1 : indices(ii)), '\s', 'once');
+        path_word{ii} = ['../TIMIT MIT/' allsenlist(1:pathEnd-1) '.wav'];
         
         % find the start and end sample for the words
-        regionOfInterest = regexp( allsenlist(previousLineBreaks(end)+1:nextLineBreaks(1)), [word '\s\d+\s\d+'], 'match' );
-        range = regexp( regionOfInterest{1}, '\d+', 'match');
+        % first cut the string to just the word and the sample range
+        regionOfInterest = regexp( allsenlist(indices(ii):end), [word '\s\d+\s\d+'], 'match', 'once');
+        % then extract only the range
+        range = regexp( regionOfInterest, '\d+', 'match');
         sampleRange{ii} = str2double(range);
         % open the recordings in the specified range
         [recordings{ii}, fs{ii}] = audioread(path_word{ii}, sampleRange{ii});

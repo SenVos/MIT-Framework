@@ -27,28 +27,26 @@ cd src
 [recs_word, fs_word, path_word, sampleRange_word] = recordingsWord(word);
 [recs_phoneme, fs_phoneme, path_phoneme, sampleRange_phoneme] = recordingsPhoneme(phoneme);
 
-sampleRange_phoneme{1:10}
-
 % get the filepath where all criteria fit
 path = intersect(intersect(intersect(path_wavfile, path_sentence), path_word), path_phoneme);
 
 % find the recording in the path
-index_word = find(strcmp(path_word, path))
-index_phoneme = find(strcmp(path_phoneme, path))
+index_word = find(strcmp(path_word, path));
+index_phoneme = find(strcmp(path_phoneme, path));
 
-% for all words and phonemes that are in the sentence and spoken by the
-% person:
+% for all words and phonemes (that are in the sentence and spoken by the
+% person):
 for kk=1:length(index_word)
     % set temporary variable for the sample range
-    word = sampleRange_word{index_word(kk)}
+    word = sampleRange_word{index_word(kk)};
     
     for ii=1:length(index_phoneme)
         % set temporary variable for the sample range
-        pho = sampleRange_phoneme{index_phoneme(ii)}
+        pho = sampleRange_phoneme{index_phoneme(ii)};
         
         % compare the sampleRanges to see if the phoneme is part of the word
-        if pho(1) >= word(1) && pho(2) <= word(2)
-            recordings = recs_phoneme(index_phoneme);
+        if word(1) <= pho(1) && pho(2) <= word(2)
+            recordings = recs_phoneme(index_phoneme(ii));
         end
     end
 end

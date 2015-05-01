@@ -10,7 +10,7 @@ clc;
 %------------Your script starts here-------- 
 
 %Define your parameters and adjust your function call
-[recordings, fs, path_word, sampleRange] = recordingsPhoneme('nx')
+[recordings, fs, path_word, sampleRange] = recordingsPhoneme('sh')
 
 %--------------------Licence ---------------------------------------------
 % Copyright (c) <2015> Daniel Budelmann and Sebastian Voges

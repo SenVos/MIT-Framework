@@ -14,7 +14,7 @@ person = 'dr1-fvmh0';
 sentence = 'she had your dark suit in greasy wash water all year';
 word = 'she';
 phoneme = 'sh';
-[recordings] = searchFor(person, sentence, word, phoneme);
+[recordings] = searchFor(person, sentence, word, phoneme)
 
 
 %--------------------Licence ---------------------------------------------
