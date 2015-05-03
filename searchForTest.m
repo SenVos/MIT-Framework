@@ -10,11 +10,11 @@ clc;
 %------------Your script starts here-------- 
 
 %Define your parameters and adjust your function call
-person = 'dr1-fvmh0';
+person = 'dr1-mcpm0';
 sentence = 'she had your dark suit in greasy wash water all year';
-word = 'she';
-phoneme = 'sh';
-[recordings] = searchFor(person, sentence, word, phoneme)
+word = 'greasy';
+phoneme = 's';
+[rec, fs] = searchFor(person, sentence, word, phoneme)
 
 
 %--------------------Licence ---------------------------------------------
