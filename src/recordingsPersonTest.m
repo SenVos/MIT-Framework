@@ -10,7 +10,7 @@ person_name='dr1-fvmh0';
 
 %----------------------wrong entry----------------------------
 
-%Name of the person
-person_name='Oliver Kahn';
-%run recordingsPerson.m
-[recordings, fs, path_wavfile] = recordingsPerson(person_name)
+% % Name of the person
+% % person_name='Oliver Kahn';
+% % run recordingsPerson.m
+% % [recordings, fs, path_wavfile] = recordingsPerson(person_name)

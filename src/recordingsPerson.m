@@ -14,6 +14,10 @@
 %------------1-----------------
 function [recordings, fs, path_wavfile] = recordingsPerson(person_name)
 
+% if person_name ==0
+%     recordings={}
+%     return
+% end
 
 %------------2-----------------
 %create a string that contains the folder adress of the person the user
@@ -48,4 +52,3 @@ for kk=1:number_of_files
 end
 
 end
-
