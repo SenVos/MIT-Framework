@@ -9,5 +9,5 @@ You can search for the following criteria:
 	3. Word
 	4. Phoneme
 
-
+##Searching for a Person
  
