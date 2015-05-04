@@ -43,7 +43,7 @@ This chapter is seperated in two paragraphs: Searching for one criterion and Sea
 
 If you want to search for one criterion (either person, sentence, word or phoneme) use the function searchFor.m.
 
-<kbd>[recordings,fs] = searchFor(person, sentence, word, phoneme)</kbd>
+```[recordings,fs] = searchFor(person, sentence, word, phoneme)```
 
 For other criteria which are not required put an empty variable ([ ]) instead.<br />
 SearchFor.m returns two variables:<br />
@@ -55,7 +55,7 @@ SearchFor.m returns two variables:<br />
 
 __For Example:__
 
-<kbd>[recordings,fs] = searchFor('dr1-fvmh0',[ ],[ ],[ ])</kbd>
+```[recordings,fs] = searchFor('dr1-fvmh0',[ ],[ ],[ ])```
 
 Returns all recordings with the fitting samlpe frequencies which belong to 'dr1-fvmh0'.
 
@@ -64,7 +64,7 @@ Returns all recordings with the fitting samlpe frequencies which belong to 'dr1-
 
 If you want to search for more criteria you can also use the function searchFor.m.
 
-<kbd>[recordings,fs] = searchFor(person, sentence, word, phoneme)</kbd>
+```[recordings,fs] = searchFor(person, sentence, word, phoneme)```
 
 Put in all criteria you want to search for.
 For other criteria which are not required put an empty variable ([ ]) instead.<br />
