@@ -1,19 +1,19 @@
 function [recordings, fs, path_sentence] = recordingsSentence(sentence)
 % function to look up all the recordings of a specific sentence
 % Usage [recordings, fs, path_sentence] = recordingsSentence(sentence)
-
+%
 % Input Parameter:
 %	  sentence:      string which contains the sentence to be searched for
-
+%
 % Output Parameter:
 %	 recordings: 	 cell array with all the recordings where the phoneme
 %                    is spoken.
 %    fs:             cell array with the corresponding sampling frequency
 %    path_word:      directory path to the corresponding wave file
-
+%
 %--------------------------------------------------------------------------
-
-%Example:
+%
+% Example:
 % 
 % [recordings, fs, path_sentence]=recordingsSentence('she had your dark suit in greasy wash water all year')
 % 
@@ -39,12 +39,13 @@ function [recordings, fs, path_sentence] = recordingsSentence(sentence)
 %     '../TIMIT MIT/dr1-fvmh0/sa1.wav'
 %     '../TIMIT MIT/dr2-marc0/sa1.wav'
 %     ...
-
+%
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 28-Apr-2015  Initials DB, SV
 % Ver. 1.00 functional function 28-Apr-2015  Initials DB, SV
 % Ver. 1.10 gives out fs and path 30-Apr-2015  Initials DB, SV
+
 
 % to avoid mistakes
 if ~ischar(sentence)
