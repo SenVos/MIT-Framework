@@ -2,7 +2,7 @@ function [recordings, fs, path_word, sampleRange] = recordingsWord(word)
 % function to find the recording sections, which contain a specific word
 % Usage [recordings, fs, path_word, sampleRange] = recordingsWord(word)
 % Input Parameter:
-%	 word: 		 string to contain the word to be searched for
+%	 word: 		 string which contains the word to be searched for
 % Output Parameter:
 %	 recordings: 	 cell array with all the recordings where the word is 
 %                    spoken.
@@ -47,8 +47,11 @@ function [recordings, fs, path_word, sampleRange] = recordingsWord(word)
 % Ver. 1.10 added output of fs, path and range 30-Apr-2015  Initials DB, SV
 % Ver. 1.20 optimized code 1-May-2015  Initials DB, SV
 
-%------------Your function implementation here--------------------------- 
-
+% to avoid mistakes
+if ~ischar(word)
+   help recordingsWord;
+   return;
+end
 
 % open the list with all words and their corresponding samples
 allsenlist = fileread('../TIMIT MIT/allsentime.txt');

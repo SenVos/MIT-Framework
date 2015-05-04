@@ -1,22 +1,35 @@
 function [recordings, fs] = searchFor(person, sentence, word, phoneme)
-% function to look for recordings of a person, sentence, word and phoneme
-% in the MIT/TIMIT-database. The function combines all the search criteria.
+% function to look for recordings of a person, sentence, word and phoneme.
+% The criteria are combined to find the phoneme, which is in the word, 
+% which is in the sentence, which is spoken by the person.
 % Usage [recordings] = searchFor(person, sentence, word, phoneme)
 % 
 % Input Parameter: (if there is no need for one or more criteria, set the
-%                   parameter to 0)
-%	 person: 		 
-%	 sentence: 		 
-%	 word:           
-%	 phoneme: 		 
+%                   parameter to [])
+%	 person: 		 string which contains the persons name to be searched
+%                    for
+%	 sentence: 		 string which contains the sentence to be searched for
+%	 word:           string which contains the word to be searched for
+%	 phoneme: 		 string which contains the phoneme to be searched for
 % Output Parameter:
-%	 recordings: 	 Explain the parameter, default values, and units
+%    recordings: 	 cell array with found recordings
+%    fs:             cell array with the corresponding sampling frequency
 %------------------------------------------------------------------------ 
-% Example: [recordings] = searchFor(person, sentence, word, phoneme)
-
+% Example: [recordings, fs] = searchFor('dr2-faem0', [], 'greasy', 's')
+% 
+% recordings = 
+% 
+%     [1821x1 double]
+% 
+% 
+% fs = 
+% 
+%     [16000]
+% 
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 29-Apr-2015  Initials DB and SV
+% Ver. 1.00 functional function 4-May-2015 Initials DB and SV
 
 %------------Your function implementation here--------------------------- 
 
@@ -41,11 +54,11 @@ if ~isempty(sentence)
     filler = path_sentence;
 end
 if ~isempty(word)
-    [recs_word, fs_word, path_word, sampleRange_word] = recordingsWord(word);
+    [~, ~, path_word, sampleRange_word] = recordingsWord(word);
     filler = path_word;
 end
 if ~isempty(phoneme)
-    [recs_phoneme, fs_phoneme, path_phoneme, sampleRange_phoneme] = recordingsPhoneme(phoneme);
+    [~, ~, path_phoneme, sampleRange_phoneme] = recordingsPhoneme(phoneme);
     filler = path_phoneme;
 end
 
@@ -56,9 +69,10 @@ path_word = fillMeUp(path_word, filler);
 path_phoneme = fillMeUp(path_phoneme, filler);
 
 % get the filepath where all criteria fit
-path = intersect(intersect(intersect(path_person, path_sentence), path_word), path_phoneme);
-
-
+[~, ipp, ~] = setxor(path_person, path_sentence);   path_person(ipp) = [];
+[~, ipp, ~] = setxor(path_person, path_word);       path_person(ipp) = [];
+[~, ipp, ~] = setxor(path_person, path_sentence);   path_person(ipp) = [];
+path = path_person;
 
 % allocate space for output variables
 recordings = cell(length(path),1);
@@ -66,33 +80,32 @@ fs = cell(length(path),1);
 sampleRange = cell(length(path),1);
 
 % find the recording in the path
-% TODO: Find correct indices of path_word, where it corresponds to path
-% test it with this: [rec, fs] = searchFor([],sentence,word,phoneme)
 index_word = find(ismember(path_word, path));
 index_phoneme = find(ismember(path_phoneme, path));
 
 % if both, word and phoneme, are needed
 if ~isempty(word) && ~isempty(phoneme)
     
-    % for all words and phonemes (that are in the sentence and spoken by
-    % the person):
-    for kk=1:length(index_word)
+    kk=1;
+    % for all relevant words (two for loops, because there could be more
+    % than one appearance of the word in the sentence)
+    for aa=1:length(index_word)
         % set temporary variable for the sample range
-        word = sampleRange_word{index_word(kk)};
+        word = sampleRange_word{index_word(aa)};
 
-        for ii=1:length(index_phoneme)
+        % for all relevant phonemes
+        for bb=1:length(index_phoneme)
             % set temporary variable for the sample range
-            pho = sampleRange_phoneme{index_phoneme(ii)};
+            pho = sampleRange_phoneme{index_phoneme(bb)};
 
             % compare the sampleRanges to see if the phoneme is part of
             % the word
             if word(1) <= pho(1) && pho(2) <= word(2)
-                sampleRange{ii} = pho;
+                sampleRange{kk} = pho;
+                kk=kk+1;
             end
         end
     end
-    % delete empty allocated cells
-    sampleRange(cellfun('isempty',sampleRange)) = [];
 
 % if only one, word or phoneme, is needed
 else
@@ -101,16 +114,18 @@ else
     elseif exist('sampleRange_phoneme')
         sampleRange = sampleRange_phoneme(index_phoneme);
     else
-        sampleRange = {[1,inf]};
+        sampleRange(:) = {[1,inf]};
     end
 end
 
 % read in wave files
 for kk=1:length(path)
-    for ii=1:length(sampleRange)
-        [recordings{ii}, fs{ii}] = audioread(path{kk}, sampleRange{ii});
-    end
+    [recordings{kk}, fs{kk}] = audioread(path{kk}, sampleRange{kk});
 end
+
+% delete empty allocated cells
+recordings(cellfun('isempty',recordings)) = [];
+fs(cellfun('isempty',fs)) = [];
 
 cd ..
 
