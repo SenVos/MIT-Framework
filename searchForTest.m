@@ -8,7 +8,6 @@ clear;
 close all;
 clc;
 
-%------------Your script starts here-------- 
 
 %Define your parameters and adjust your function call
 person = 'dr1-mcpm0';

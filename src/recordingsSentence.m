@@ -40,6 +40,10 @@ function [recordings, fs, path_sentence] = recordingsSentence(sentence)
 %     '../TIMIT MIT/dr2-marc0/sa1.wav'
 %     ...
 %
+% To play the recording back use:
+% soundsc(recordings{x}, fs{x})
+% where x corresponds to the recording to be played back
+%
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 28-Apr-2015  Initials DB, SV

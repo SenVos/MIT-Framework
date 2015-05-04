@@ -1,4 +1,4 @@
-% Script to test the function recordingsPhoneme.m 
+% Script to test the function recordingsPerson.m 
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 29-Apr-2015 			 Initials DB and SV

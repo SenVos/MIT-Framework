@@ -53,7 +53,6 @@ function [recordings, fs, path_phoneme, sampleRange] = recordingsPhoneme(phoneme
 % Ver. 1.10 added output of fs, path and range 30-Apr-2015  Initials DB, SV
 % Ver. 1.20 optimized code 1-May-2015  Initials DB, SV
 
-%------------Your function implementation here--------------------------- 
 
 % to avoid mistakes
 if ~ischar(phoneme)

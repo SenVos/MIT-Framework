@@ -40,6 +40,10 @@ function [recordings, fs, path_wavfile] = recordingsPerson(person_name)
 %     '../TIMIT MIT/dr1-fvmh0/sa2.wav'
 %     '../TIMIT MIT/dr1-fvmh0/si1466.wav'
 %     ...
+%
+% To play the recording back use:
+% soundsc(recordings{x}, fs{x})
+% where x corresponds to the recording to be played back
 % 
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF
 
