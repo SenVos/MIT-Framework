@@ -1,43 +1,56 @@
 function [recordings, fs, path_sentence] = recordingsSentence(sentence)
 % function to look up all the recordings of a specific sentence
-% Usage [recordings] = recordingsSentence(sentences)
+% Usage [recordings, fs, path_sentence] = recordingsSentence(sentence)
+
 % Input Parameter:
-%	 sentences: 	string to contain the sentence to be searched for
+%	  sentence:      string which contains the sentence to be searched for
+
 % Output Parameter:
-%	 recordings: 	 cell array with all the recordings (and their sample
-% frequency) where the sentence is spoken. To play the recording back use:
-%       soundsc(recordings{x,1}, recordings{x,2})
-% where x corresponds to the recording to be played back.
-%------------------------------------------------------------------------ 
-% Example: bub
-%
+%	 recordings: 	 cell array with all the recordings where the phoneme
+%                    is spoken.
+%    fs:             cell array with the corresponding sampling frequency
+%    path_word:      directory path to the corresponding wave file
+
+%--------------------------------------------------------------------------
+
+%Example:
+% 
+% [recordings, fs, path_sentence]=recordingsSentence('she had your dark suit in greasy wash water all year')
+% 
 % recordings = 
 % 
-%     [39732x1 double]    [16000]
-%     [40141x1 double]    [16000]
-%     [38196x1 double]    [16000]
-%     [45260x1 double]    [16000]
-%     [49562x1 double]    [16000]
-%     [49868x1 double]    [16000]
-%     [44749x1 double]    [16000]
-%     [49050x1 double]    [16000]
-%     [47514x1 double]    [16000]
-%     [44647x1 double]    [16000]
-%     [55296x1 double]    [16000]
-%     [49357x1 double]    [16000]
-%     [44135x1 double]    [16000]
-%     [53248x1 double]    [16000]
-%     [41575x1 double]    [16000]
-%     [58470x1 double]    [16000]
+%     [48743x1 double]
+%     [54681x1 double]
+%     [47104x1 double]
+%     ...
 % 
 % 
+% fs = 
+% 
+%     [16000]
+%     [16000]
+%     [16000]
+%     ...
+% 
+% 
+% path_sentence = 
+% 
+%     '../TIMIT MIT/dr1-mcpm0/sa1.wav'
+%     '../TIMIT MIT/dr1-fvmh0/sa1.wav'
+%     '../TIMIT MIT/dr2-marc0/sa1.wav'
+%     ...
+
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
 % Ver. 0.01 initial create 28-Apr-2015  Initials DB, SV
 % Ver. 1.00 functional function 28-Apr-2015  Initials DB, SV
 % Ver. 1.10 gives out fs and path 30-Apr-2015  Initials DB, SV
 
-%------------Your function implementation here--------------------------- 
+% to avoid mistakes
+if ~ischar(sentence)
+    help recordingsSentence.m
+    return;
+end
 
 if nargin ~= 1
     help recordingsSentence;
