@@ -1,16 +1,16 @@
 % Script to test the function recordingsSentence.m 
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
-% Ver. 0.01 initial create (empty) 28-Apr-2015 			 Initials (eg. JB)
+% Ver. 0.01 initial create 28-Apr-2015 			 Initials DB and SV
+% Ver. 1.00 Tester implemented 4-May-2015 			 Initials DB and SV
 
 clear;
 close all;
 clc;
 
-%------------Your script starts here-------- 
-
-%Define your parameters and adjust your function call
-[recordings, fs, path_sentence] = recordingsSentence('don''t ask me to carry an oily rag like that')
+sentence = 'don''t ask me to carry an oily rag like that';
+[recordings, fs, path_sentence] = recordingsSentence(sentence);
+assert(length(recordings) == 16, 'Wrong number of found sentences');
 
 
 %--------------------Licence ---------------------------------------------

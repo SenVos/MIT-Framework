@@ -8,14 +8,9 @@ clear;
 close all;
 clc;
 
-%------------Your script starts here-------- 
-
-%Define your parameters and adjust your function call
 phoneme = 'sh';
 [recordings, fs, path_word, sampleRange] = recordingsPhoneme(phoneme);
 assert(length(recordings) == 77, 'Wrong number of found phonemes');
-
-
 
 
 %--------------------Licence ---------------------------------------------
