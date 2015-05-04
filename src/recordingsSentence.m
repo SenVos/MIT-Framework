@@ -39,6 +39,16 @@ function [recordings, fs, path_sentence] = recordingsSentence(sentence)
 
 %------------Your function implementation here--------------------------- 
 
+if nargin ~= 1
+    help recordingsSentence;
+    return;
+end
+
+if ~ischar(sentence)
+    help recordingsSentence;
+    return;   
+end
+
 % open the list with all sentences
 allsenlist = fileread('../TIMIT MIT/allsenlist.txt');
 
