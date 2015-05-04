@@ -1,8 +1,8 @@
 function [recordings, fs, path_phoneme, sampleRange] = recordingsPhoneme(phoneme)
-% function to look up all the recordings of a specific phonem
-% Usage [recordings] = recordingsPhoneme(phoneme)
+% function to look up all the recordings for a specific phoneme
+% Usage [recordings, fs, path_phoneme, sampleRange] = recordingsPhoneme(phoneme)
 % Input Parameter:
-%	 phoneme: 	string to contain the phonem to be searched for
+%	 phoneme: 	string which contains the phoneme to be searched for
 % Output Parameter:
 %	 recordings: 	 cell array with all the recordings where the phoneme
 %                    is spoken.
@@ -54,6 +54,13 @@ function [recordings, fs, path_phoneme, sampleRange] = recordingsPhoneme(phoneme
 % Ver. 1.20 optimized code 1-May-2015  Initials DB, SV
 
 %------------Your function implementation here--------------------------- 
+
+% to avoid mistakes
+if ~ischar(phoneme)
+   help recordingsPhoneme;
+   return;
+end
+
 
 % open the list with all words and their corresponding samples
 allphonetime = fileread('../TIMIT MIT/allphonetime.txt');

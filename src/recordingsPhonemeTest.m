@@ -1,7 +1,8 @@
 % Script to test the function recordingsPhoneme.m 
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
-% Ver. 0.01 initial create (empty) 29-Apr-2015 			 Initials (eg. JB)
+% Ver. 0.01 initial create 29-Apr-2015 			 Initials DB and SV
+% Ver. 1.00 Tester implemented 4-May-2015        Initials DV and SV
 
 clear;
 close all;
@@ -10,7 +11,12 @@ clc;
 %------------Your script starts here-------- 
 
 %Define your parameters and adjust your function call
-[recordings, fs, path_word, sampleRange] = recordingsPhoneme('sh')
+phoneme = 'sh';
+[recordings, fs, path_word, sampleRange] = recordingsPhoneme(phoneme);
+assert(length(recordings) == 77, 'Wrong number of found phonemes');
+
+
+
 
 %--------------------Licence ---------------------------------------------
 % Copyright (c) <2015> Daniel Budelmann and Sebastian Voges

@@ -1,16 +1,16 @@
 % Script to test the function recordingsWord.m 
 % Author: Daniel Budelmann and Sebastian Voges (c) TGM @ Jade Hochschule applied licence see EOF 
 % Version History:
-% Ver. 0.01 initial create (empty) 29-Apr-2015 			 Initials (eg. JB)
+% Ver. 0.01 initial create 29-Apr-2015 			 Initials DB and SV
+% Ver. 1.00 Tester implemented 4-May-2015 			 Initials DB and SV
 
 clear;
 close all;
 clc;
 
-%------------Your script starts here-------- 
-
-%Define your parameters and adjust your function call
-[recordings, fs, path_word, sampleRange] = recordingsWord('example')
+word = 'example';
+[recordings, fs, path_word, sampleRange] = recordingsWord(word);
+assert(length(recordings{1}) == 7802, 'Wrong audiosample');
 
 
 %--------------------Licence ---------------------------------------------
